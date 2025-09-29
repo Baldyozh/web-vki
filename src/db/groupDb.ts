@@ -5,7 +5,7 @@ import type GroupInterface from '@/types/GroupInterface';
 sqlite3.verbose();
 
 export const getGroupsDb = async (): Promise<GroupInterface[]> => {
-  const db = new sqlite3.Database(process.env.DB ?? './db/vki-web.db');
+  const db = new sqlite3.Database(process.env.DB ?? 'G:/db/vki-web.db');
 
   const groups = await new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM class';

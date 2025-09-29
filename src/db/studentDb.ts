@@ -5,7 +5,7 @@ import StudentInterface from '@/types/StudentInterface';
 sqlite3.verbose();
 
 export const getStudentDb = async (): Promise<StudentInterface[]> => {
-  const db = new sqlite3.Database(process.env.DB ?? './db/vki-web.db');
+  const db = new sqlite3.Database(process.env.DB ?? 'G:/db/vki-web.db');
 
   const students = await new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM student';

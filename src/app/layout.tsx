@@ -7,9 +7,9 @@ import type GroupInterface from '@/types/GroupInterface';
 import Header from '@/components/layout/Header/Header';
 import Footer from '@/components/layout/Footer/Footer';
 import Main from '@/components/layout/Main/Main';
-
+import StudentInterface from '@/types/StudentInterface';
 import type { Metadata } from 'next';
-
+import { getStudentsApi } from '@/api/studentApi';
 import '@/styles/globals.scss';
 
 export const metadata: Metadata = {
@@ -29,6 +29,19 @@ const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode }>)
       return groups;
     },
   });
+
+  let students: StudentInterface[];
+
+  // выполняется на сервере - загрузка групп
+  await queryClient.prefetchQuery({
+    queryKey: ['students'],
+    queryFn: async () => {
+      students = await getStudentsApi();
+      console.log('students', students);
+      return groups;
+    },
+  });
+
 
   const state = dehydrate(queryClient, { shouldDehydrateQuery: () => true });
 
