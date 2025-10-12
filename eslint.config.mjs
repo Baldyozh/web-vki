@@ -10,7 +10,7 @@ export default [
     ignores: ["**/node_modules/*", "**/.next/*", "**/.cache/*"], // Add common ignore patterns
   },
   {
-    files: ["**/*.{js,jsx,ts,tsx}"],
+    files: [],
     plugins: {
       "@stylistic": stylistic,
       // next: next, // Use the 'next' plugin
