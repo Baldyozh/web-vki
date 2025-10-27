@@ -1,58 +1,52 @@
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { FlatCompat } from '@eslint/eslintrc';
 import stylistic from "@stylistic/eslint-plugin";
-import js from "@eslint/js";
-// import next from "eslint-plugin-next";
-import globals from "globals";
-import typescriptEslintPlugin from "@typescript-eslint/eslint-plugin";
-import typescriptEslintParser from "@typescript-eslint/parser";
-
-export default [
-  {
-    ignores: ["**/node_modules/*", "**/.next/*", "**/.cache/*"], // Add common ignore patterns
-  },
-  {
-    files: [],
-    plugins: {
-      "@stylistic": stylistic,
-      // next: next, // Use the 'next' plugin
-      "@typescript-eslint": typescriptEslintPlugin,
-    },
-    languageOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-        ...globals.es6,
-        React: "readonly", // Important for React projects
-      },
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
-      parser: typescriptEslintParser, //  Specify the TypeScript parser for all JS/TS files
-    },
-    settings: {
-      // next: {
-      //   rootDir: ["."], // Point to your Next.js root
-      // },
-      react: {
-        version: 'detect', // Automatically detect React version
-      },
-    },
-    rules: {
-      ...js.configs.recommended.rules, // Use recommended ruleset
 
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+  recommendedConfig: {},
+});
+
+const eslintConfig = [
+  ...compat.extends(
+    'next/core-web-vitals',
+    'next/typescript',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'eslint:recommended',
+    // 'plugin:@stylistic/recommended', // - не работает
+  ),
+  ...compat.config({
+
+    env: {
+      'browser': true,
+      'es2021': true,
+      'node': true
+    },
+
+    plugins: [
+      'react',
+      '@typescript-eslint',
+      '@stylistic', // - не работает
+      // 'stylistic', // если нужно явно
+    ],
+    
+        rules: {
       // ...next.configs.recommended.rules, // Add next.js recommended rules
-      // ...next.configs.coreWebVitals.rules,  // Add next.js core web vitals rules,
-      ...typescriptEslintPlugin.configs["recommended-type-checked"].rules,  // Enable recommended typescript rules
+      //...next.configs.coreWebVitals.rules,  // Add next.js core web vitals rules,
+      // ...js.configs.recommended.rules, // Use recommended ruleset
+      // ...typescriptEslintPlugin.configs["recommended-type-checked"].rules,  // Enable recommended typescript rules
       ...stylistic.configs.recommended.rules,
 
       // Stylistic rules (configure these to your preference)
-      "@stylistic/semi": ["error", "always"],
-      "@stylistic/indent": ["error", 2],
-      "@stylistic/quotes": ["error", "single", { avoidEscape: true }],
+      "@stylistic/semi": ["warn", "always"],
+      "@stylistic/indent": ["warn", 2],
+      "@stylistic/quotes": ["warn", "single", { avoidEscape: true }],
       "@stylistic/object-curly-spacing": ["error", "always"],
       "@stylistic/array-bracket-spacing": ["error", "never"],
       // "@stylistic/space-before-function-paren": ["error", {
@@ -111,14 +105,31 @@ export default [
 
       ],
     },
-  },
-  {
-    // Typescript specific config for type-aware linting.
-    files: ["**/*.ts?(x)"],
-    languageOptions: {
-      parserOptions: {
-        project: true, // Enable type-aware linting for TypeScript projects.  Requires `tsconfig.json`.
-      },
-    },
-  },
+
+
+    // rules: {
+    //   indent: ['warn', 2],
+    //   quotes: ['warn', 'single'],
+    //   semi: ['warn', 'always'],
+    //   'comma-spacing': ['warn', { before: false, after: true }],
+    //   'import/order': [
+    //     'warn',
+    //     {
+    //       'newlines-between': 'always',
+    //       groups: [
+    //         'builtin',
+    //         'external',
+    //         'internal',
+    //         'parent',
+    //         'sibling',
+    //         'index',
+    //         'object',
+    //         'type',
+    //       ],
+    //     },
+    //   ],
+    // }
+  }),
 ];
+
+export default eslintConfig;

@@ -30,54 +30,49 @@ http://localhost:3000/api/groups - апи
 
 
 ## Конфигурация
-1) Создать файл .env.local в корне проекта
-    ```
-    # .env.local
-    DB="g:/db/vki-web.db"
-    NEXT_PUBLIC_API="http://localhost:3000/api/"
-    ```
-2) Скопировать базу данных и ./db/vki-web.db в G:\db\vki-web.db
+Создать файл .env.local в корне проекта
+```
+# .env.local
+DB="g:/vki-web/vki-web-orm.db"
+NEXT_PUBLIC_API="http://localhost:3000/api/"
+```
+
+## Файловый раутинг Next.js - работает из папки src/app
+
+[читать по ссылке](docs/next-routing.md)
+
 
 ## Назначение файлов
 
-### Приложение
+### Приложение - Frontend
 
-- Главный шаблон (точка входа) - src/app/layout.tsx 
-- Компоненты шаблона - src/app/components/layout
-- Страница - src/app/groups/page.tsx
-- Компонент - src/components/Groups/Groups.tsx
-- Хук получения данных - src/hooks/useGroups.tsx
-- Получение данных из API - src/api/groupsApi.ts
+- Главный шаблон (точка входа) - [src/app/layout.tsx](src/app/layout.tsx)
+- Компоненты шаблона - [src/app/components/layout](src/app/components/layout)
+- Страница - [src/app/groups/page.tsx](src/app/groups/page.tsx)
+- Компонент - [src/components/Groups/Groups.tsx](src/components/Groups/Groups.tsx)
+- Хук получения данных - [src/hooks/useGroups.tsx](src/hooks/useGroups.tsx)
+- Получение данных из API - [src/api/groupsApi.ts](src/api/groupsApi.ts)
 
-### API
+### API - Backend
 
-- API возвращает список групп - src/app/groups/route.ts
-- Запрос к БД - src/db/groupDb.ts
+- API возвращает список групп - [src/app/groups/route.ts](src/app/groups/route.ts)
+- Запрос к БД - [src/db/groupDb.ts](src/db/groupDb.ts)
 - Стартовая БД и запросы - папка db в корне проекта
 
 ## Работа с данными
 ![data](docs/pics/data.png)
 
-## Работа с данными в приложении TanStack Query
 
-![tanstack1](docs/pics/tanstack1.png)
-![tanstack1](docs/pics/tanstack2.png)
+## Инструменты
+- ### [Debug - отладка, средства разработки браузера](docs/debug.md)
+- ### [TanStackQuery - работа с данными в приложении](docs/tanstack-query.md)
+- ### [БД SQLite](docs/db.md)
+- ### [HTTP запросы](docs/http.md)
+- ### [GIT](docs/git.md)
 
-## Работа с БД SQLite
+## SSR - Server Side Rendering, передача состояния на клиент
+[читать по ссылке](docs/ssr.md)
 
-### Установить плагин
-
-![database-client](docs/pics/database-client.png)
-
-### Подключение к БД
-
-![db-connect](docs/pics/db-connect.png)
-
-### Выполнение запроса
-
-![sql1](docs/pics/sql1.png)
-![sql2](docs/pics/sql2.png)
-![sql3](docs/pics/sql3.png)
 
 ## Ссылки
 

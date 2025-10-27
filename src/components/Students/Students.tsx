@@ -1,54 +1,59 @@
 'use client';
 
-import { useState } from 'react';
 import useStudents from '@/hooks/useStudents';
-import StudentInterface from '@/types/StudentInterface';
-import AddStudent from './AddStudent';
-import Student from './Student';
+import type StudentInterface from '@/types/StudentInterface';
+import styles from './Students.module.scss';
+import Student from './Student/Student';
+import AddStudent, { type FormFields } from './AddStudent/AddStudent';
+import { v4 as uuidv4 } from 'uuid';
 
 const Students = (): React.ReactElement => {
-  const { students, deleteStudent, isLoading, isDeleting, refetch } = useStudents();
-  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const {
+    students,
+    deleteStudentMutate,
+    addStudentMutate,
+  } = useStudents();
 
+  /**
+   * Удаление студента - обработчик события нажатия "удалить"
+   * @param studentId Ид студента
+   */
+  const onDeleteHandler = (studentId: number): void => {
+    if (confirm('Удалить студента?')) {
+      console.log('onDeleteHandler', studentId);
+      debugger;
 
-  const handleDelete = async (id: number) => {
-    if (window.confirm('Вы уверены, что хотите удалить этого студента?')) {
-      try {
-        setDeletingId(id);
-        await deleteStudent(id);
-      } catch (error) {
-        console.error('Error deleting student:', error);
-        alert('Ошибка при удалении студента');
-      } finally {
-        setDeletingId(null);
-      }
+      deleteStudentMutate(studentId);
     }
   };
 
-  if (isLoading) {
-    return <div>Загрузка...</div>;
-  }
+  /**
+   * Добавления студента - обработчик события нажатия "добавить"
+   * @param studentFormField Форма студента
+   */
+  const onAddHandler = (studentFormField: FormFields): void => {
+    console.log('Добавление студента', studentFormField);
+    debugger;
+
+    addStudentMutate({
+      id: -1,
+      ...studentFormField,
+      groupId: 1,
+      uuid: uuidv4(),
+    });
+  };
 
   return (
-    <div>
-      <AddStudent />
-      
-      <div style={{ marginTop: '20px' }}>
-        <h2>Список студентов ({students.length})</h2>
-        {students.length === 0 ? (
-          <p>Студенты не найдены</p>
-        ) : (
-          <div>
-            {students.map((student: StudentInterface) => (
-              <Student
-                key={student.id}
-                student={student}
-                onDelete={handleDelete}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+    <div className={styles.Students}>
+      <AddStudent onAdd={onAddHandler} />
+
+      {students.map((student: StudentInterface) => (
+        <Student
+          key={student.id || student.uuid}
+          student={student}
+          onDelete={onDeleteHandler}
+        />
+      ))}
     </div>
   );
 };
