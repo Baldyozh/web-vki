@@ -1,16 +1,32 @@
 import { Student } from './entity/Student.entity';
 import type StudentInterface from '@/types/StudentInterface';
 import getRandomFio from '@/utils/getRandomFio';
-import AppDataSource from './AppDataSource';
-
-const studentRepository = AppDataSource.getRepository(Student);
+import AppDataSource, { ensureInitialized } from './AppDataSource';
 
 /**
  * Получение студентов
  * @returns Promise<StudentInterface[]>
  */
 export const getStudentsDb = async (): Promise<StudentInterface[]> => {
-  return await studentRepository.find();
+  await ensureInitialized();
+  const studentRepository = AppDataSource.getRepository(Student);
+  return await studentRepository.find({
+    relations: ['group'],
+  });
+};
+
+/**
+ * Получение студента по ID
+ * @param studentId ИД студента
+ * @returns Promise<StudentInterface | null>
+ */
+export const getStudentByIdDb = async (studentId: number): Promise<StudentInterface | null> => {
+  await ensureInitialized();
+  const studentRepository = AppDataSource.getRepository(Student);
+  return await studentRepository.findOne({
+    where: { id: studentId },
+    relations: ['group'],
+  });
 };
 
 /**
@@ -19,6 +35,8 @@ export const getStudentsDb = async (): Promise<StudentInterface[]> => {
  * @returns Promise<number>
  */
 export const deleteStudentDb = async (studentId: number): Promise<number> => {
+  await ensureInitialized();
+  const studentRepository = AppDataSource.getRepository(Student);
   await studentRepository.delete(studentId);
   return studentId;
 };
@@ -29,6 +47,8 @@ export const deleteStudentDb = async (studentId: number): Promise<number> => {
  * @returns Promise<StudentInterface>
  */
 export const addStudentDb = async (studentFields: Omit<StudentInterface, 'id'>): Promise<StudentInterface> => {
+  await ensureInitialized();
+  const studentRepository = AppDataSource.getRepository(Student);
   const student = new Student();
   const newStudent = await studentRepository.save({
     ...student,

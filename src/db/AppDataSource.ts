@@ -11,27 +11,39 @@ const AppDataSource = new DataSource({
   logging: false,
 });
 
-// to initialize the initial connection with the database, register all entities
-// and "synchronize" database schema, call "initialize()" method of a newly created database
-// once in your application bootstrap
-// const init = async (): Promise<void> => {
-//   try {
-//     await AppDataSource.initialize();
-//   }
-//   catch (error) {
-//     console.log(error);
-//   }
-// };
+// Ленивая инициализация для Next.js
+let isInitialized = false;
+let initializationPromise: Promise<void> | null = null;
 
-// init();
+const ensureInitialized = async (): Promise<void> => {
+  if (isInitialized) {
+    return;
+  }
 
-AppDataSource.initialize()
-  .then(() => {
-    console.log('Data Source has been initialized!');
-    // You can now interact with your entities
-  })
-  .catch((err) => {
-    console.error('Error during Data Source initialization:', err);
-  });
+  if (initializationPromise) {
+    return initializationPromise;
+  }
+
+  initializationPromise = AppDataSource.initialize()
+    .then(() => {
+      isInitialized = true;
+      console.log('Data Source has been initialized!');
+      console.log('Database path:', process.env.DB ?? './db/vki-web.db');
+    })
+    .catch((err) => {
+      isInitialized = false;
+      initializationPromise = null;
+      console.error('Error during Data Source initialization:', err);
+      throw err;
+    });
+
+  return initializationPromise;
+};
+
+// Инициализация при первом импорте модуля
+ensureInitialized().catch((err) => {
+  console.error('Failed to initialize Data Source on module load:', err);
+});
 
 export default AppDataSource;
+export { ensureInitialized };

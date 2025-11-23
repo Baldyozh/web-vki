@@ -38,7 +38,6 @@ const Students = (): React.ReactElement => {
     addStudentMutate({
       id: -1,
       ...studentFormField,
-      groupId: 1,
       uuid: uuidv4(),
     });
   };
