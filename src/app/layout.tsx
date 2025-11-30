@@ -6,9 +6,9 @@ import { getGroupsApi } from '@/api/groupsApi';
 import Header from '@/components/layout/Header/Header';
 import Footer from '@/components/layout/Footer/Footer';
 import Main from '@/components/layout/Main/Main';
-
+import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
-
+import { verifyAccessToken } from '@/utils/jwt';
 import '@/styles/globals.scss';
 import { META_DESCRIPTION, META_TITLE } from '@/constants/meta';
 import { getStudentsApi } from '@/api/studentsApi';
@@ -19,6 +19,12 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode }>): Promise<React.ReactElement> => {
+  const cookieStore = await cookies();
+
+  const accessToken = cookieStore.get('accessToken')?.value;
+
+  const userFromServer = verifyAccessToken(accessToken);
+ 
   // выполняется на сервере - загрузка групп
   await queryClient.prefetchQuery({
     queryKey: ['groups'],

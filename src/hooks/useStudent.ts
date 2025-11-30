@@ -24,3 +24,4 @@ const useStudent = (studentId: number): StudentHookInterface => {
 
 export default useStudent;
 
+

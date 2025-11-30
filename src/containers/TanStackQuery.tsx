@@ -3,6 +3,7 @@
 import { hydrate, QueryClientProvider, type DehydratedState } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import queryClient from '@/api/reactQueryClient';
+import AuthInitializer from '@/components/auth/AuthInitializer';
 
 interface Props {
   state: DehydratedState;
@@ -14,6 +15,7 @@ const TanStackQuery = ({ state, children }: Props): React.ReactElement => {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <AuthInitializer />
       {children}
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

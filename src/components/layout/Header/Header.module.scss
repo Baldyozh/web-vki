@@ -12,4 +12,15 @@
 
 .title {
   font-weight: bold;
+  text-decoration: none;
+  &:active,
+  &:hover,
+  &:visited {
+    text-decoration: none !important;
+  }
+
+  @media #{main.$mob} {
+    display: none;
+  }
+
 }
