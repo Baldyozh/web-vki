@@ -2,11 +2,12 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { Group } from './entity/Group.entity';
 import { Student } from './entity/Student.entity';
+import { User } from './entity/User.entity';
 
 const AppDataSource = new DataSource({
   type: 'sqlite',
   database: process.env.DB ?? './db/vki-web.db', // Path to your SQLite database file
-  entities: [Group, Student],
+  entities: [Group, Student, User],
   synchronize: true, // Auto-create schema on startup (use with caution in production)
   logging: false,
 });
