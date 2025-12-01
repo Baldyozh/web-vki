@@ -60,4 +60,3 @@ const StudentDetail = ({ student }: Props): React.ReactElement => {
 
 export default StudentDetail;
 
-

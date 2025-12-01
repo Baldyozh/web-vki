@@ -28,4 +28,3 @@ const BackButton = ({ href, text = '<< список студентов' }: Props
 
 export default BackButton;
 
-

@@ -35,4 +35,3 @@ const StudentPage = (): React.ReactNode => {
 
 export default StudentPage;
 
-

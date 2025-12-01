@@ -1,4 +1,4 @@
-import LoginForm from '@/components/auth/LoginForm/LoginForm';
+import Groups from '@/components/Groups/Groups';
 import Page from '@/components/layout/Page/Page';
 import { META_DESCRIPTION, META_TITLE } from '@/constants/meta';
 import { type Metadata } from 'next/types';
@@ -8,18 +8,11 @@ export const metadata: Metadata = {
   description: META_DESCRIPTION,
 };
 
-const LoginPage = (): React.ReactNode => (
+const GroupsPage = (): React.ReactNode => (
   <Page>
-    <h1>Авторизация</h1>
-    <p>
-      Используйте один из тестовых аккаунтов:
-      <br />
-      admin@example.com / admin123
-      <br />
-      manager@example.com / manager123
-    </p>
-    <LoginForm />
+    <h1>Группы</h1>
+    <Groups />
   </Page>
 );
 
-export default LoginPage;
+export default GroupsPage;
