@@ -17,6 +17,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const user = await userService.verifyCredentials(email, password);
 
     if (!user || !user.isActive) {
+      
       return NextResponse.json(
         { message: 'Неверный логин или пароль' },
         { status: 401 },

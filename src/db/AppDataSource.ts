@@ -1,50 +1,51 @@
 import 'reflect-metadata';
-import { DataSource } from 'typeorm';
-import { Group } from './entity/Group.entity';
+import { DataSource, type DataSourceOptions } from 'typeorm';
 import { Student } from './entity/Student.entity';
+import { Group } from './entity/Group.entity';
 import { User } from './entity/User.entity';
 
-const AppDataSource = new DataSource({
-  type: 'sqlite',
-  database: process.env.DB ?? './db/vki-web.db', // Path to your SQLite database file
-  entities: [Group, Student, User],
-  synchronize: true, // Auto-create schema on startup (use with caution in production)
+const timeout = 30000;
+
+const config: DataSourceOptions = {
+  ...(process.env.POSTGRES
+    ? {
+      type: 'postgres',
+      url: process.env.POSTGRES,
+      ssl: true,
+      connectTimeoutMS: timeout,
+      extra: {
+        ssl: { rejectUnauthorized: false },
+        connectionTimeoutMillis: timeout,
+        query_timeout: timeout,
+        idle_in_transaction_session_timeout: timeout,
+      },
+    }
+    : {
+      type: 'sqlite',
+      database: process.env.DB ?? './db/vki-web.db',
+    }),
+  synchronize: process.env.NODE_ENV !== 'production',
+  migrationsRun: process.env.NODE_ENV === 'production',
   logging: false,
-});
-
-// Ленивая инициализация для Next.js
-let isInitialized = false;
-let initializationPromise: Promise<void> | null = null;
-
-const ensureInitialized = async (): Promise<void> => {
-  if (isInitialized) {
-    return;
-  }
-
-  if (initializationPromise) {
-    return initializationPromise;
-  }
-
-  initializationPromise = AppDataSource.initialize()
-    .then(() => {
-      isInitialized = true;
-      console.log('Data Source has been initialized!');
-      console.log('Database path:', process.env.DB ?? './db/vki-web.db');
-    })
-    .catch((err) => {
-      isInitialized = false;
-      initializationPromise = null;
-      console.error('Error during Data Source initialization:', err);
-      throw err;
-    });
-
-  return initializationPromise;
+  entities: [Student, Group, User],
 };
 
-// Инициализация при первом импорте модуля
-ensureInitialized().catch((err) => {
-  console.error('Failed to initialize Data Source on module load:', err);
-});
+const AppDataSource = new DataSource(config);
+
+export const dbInit = async (): Promise<void> => {
+  try {
+    if (AppDataSource.isInitialized) {
+      console.log('AppDataSource.isInitialized');
+      return;
+    }
+    await AppDataSource.initialize();
+    console.log('AppDataSource.initialize');
+  }
+  catch (error) {
+    console.log(error);
+  }
+};
+
+// await dbInit();
 
 export default AppDataSource;
-export { ensureInitialized };

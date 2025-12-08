@@ -45,7 +45,7 @@ const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode }>)
     <TanStackQuery state={state}>
       <html lang="ru">
         <body>
-          <Header />
+          <Header userFromServer={userFromServer} />
           <Main>
             <>{children}</>
           </Main>

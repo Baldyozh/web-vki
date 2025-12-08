@@ -1,7 +1,7 @@
 import AppDataSource from '@/db/AppDataSource';
 import { Group } from '@/db/entity/Group.entity';
 import type GroupInterface from '@/types/GroupInterface';
-
+//
 export class GroupService {
   private get repository(): ReturnType<typeof AppDataSource.getRepository> {
     return AppDataSource.getRepository(Group);
